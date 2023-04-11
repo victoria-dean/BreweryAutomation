@@ -1,0 +1,500 @@
+{
+	"info": {
+		"_postman_id": "cd3f774e-389a-40eb-91af-c4ffc22fba8b",
+		"name": "Brewery Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Breweries",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "22a15763-501a-4c92-812f-4d04b53222de",
+						"exec": [
+							"pm.test(\"List is not empty\",()=>{\r",
+							"    const response = pm.response.json()\r",
+							"    //console.log(response)\r",
+							"    pm.expect(response.length).to.be.greaterThan(0)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"List entry has all fields\",()=>{\r",
+							"    const expectedNumFields = 16\r",
+							"    const response = pm.response.json()\r",
+							"    var entry = response[0]\r",
+							"    var numFields = 0\r",
+							"\r",
+							"    console.log(entry.id)\r",
+							"    //get a brewery ID for later testing\r",
+							"    pm.globals.set(\"SelectedBrew\",entry.id)\r",
+							"    \r",
+							"    for(child in entry){\r",
+							"        numFields++\r",
+							"    }\r",
+							"    pm.expect(numFields).to.eql(expectedNumFields)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"all entries have all fields\",()=>{\r",
+							"    const expectedNumFields = 16\r",
+							"    const response = pm.response.json()\r",
+							"    var success = true\r",
+							"\r",
+							"    for(entry of response){\r",
+							"        var numFields = 0\r",
+							"\r",
+							"        for(child in entry){\r",
+							"            numFields++\r",
+							"        }\r",
+							"\r",
+							"        if(numFields!=expectedNumFields){\r",
+							"            success = false\r",
+							"        }\r",
+							"    }\r",
+							"    pm.expect(success).to.eql(true)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "d29eb9e7-41de-4769-a58d-b49b96da66ef",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.openbrewerydb.org/v1/breweries"
+			},
+			"response": [
+				{
+					"id": "fae36bf4-59c1-4734-a75a-b026c3c3fbf7",
+					"name": "Get Breweries (Filtered)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.openbrewerydb.org/v1/breweries?by_state=nevada&sort=type,name:asc&per_page=3&by_city=Las Vegas&page=2&by_type=brewpub",
+							"protocol": "https",
+							"host": [
+								"api",
+								"openbrewerydb",
+								"org"
+							],
+							"path": [
+								"v1",
+								"breweries"
+							],
+							"query": [
+								{
+									"key": "by_state",
+									"value": "nevada"
+								},
+								{
+									"key": "sort",
+									"value": "type,name:asc"
+								},
+								{
+									"key": "per_page",
+									"value": "3"
+								},
+								{
+									"key": "by_postal",
+									"value": "89101",
+									"disabled": true
+								},
+								{
+									"key": "by_dist",
+									"value": "36.173,-115.144",
+									"disabled": true
+								},
+								{
+									"key": "by_city",
+									"value": "Las Vegas"
+								},
+								{
+									"key": "by_name",
+									"value": "Ellis",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "by_type",
+									"value": "brewpub"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"responseTime": null,
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Get Single Brewery",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "16337b75-d08f-4abb-8c6f-6d89944f5253",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "33309834-25f8-4d7a-8624-a493c43ba285",
+						"exec": [
+							"pm.test(\"List entry has all fields\",()=>{\r",
+							"    const expectedNumFields = 16\r",
+							"    const response = pm.response.json()\r",
+							"    var numFields = 0\r",
+							"\r",
+							"    console.log(response)\r",
+							"\r",
+							"    for(child in response){\r",
+							"        numFields++\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(numFields).to.eql(expectedNumFields)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Entry has no null fields\",()=>{\r",
+							"    const response = pm.response.json()\r",
+							"    var success = true\r",
+							"\r",
+							"    for(child in response){\r",
+							"        if(child!=\"address_2\" && child!=\"address_3\"){\r",
+							"            if(response[child] == null){\r",
+							"                success = false\r",
+							"                console.error(child +\" contains null value\")\r",
+							"            }\r",
+							"            \r",
+							"            //console.log(child + \"::\" + response[child])\r",
+							"        }\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(success).to.eql(true)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "5b3f774c-6cfc-4578-a160-625fadd1da41",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.openbrewerydb.org/v1/breweries/{{SelectedBrew}}"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Random Brewery",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "c0f67c83-997d-485d-8e26-fdcb5f9d1255",
+						"exec": [
+							"pm.test(\"Get Brewery ID\",()=>{\r",
+							"    const response = pm.response.json()[0]\r",
+							"    console.log(response)\r",
+							"    //get a brewery ID for later testing\r",
+							"    pm.globals.set(\"SelectedBrew\",response.id)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"List entry has all fields\",()=>{\r",
+							"    const expectedNumFields = 16\r",
+							"    const response = pm.response.json()[0]\r",
+							"    var numFields = 0\r",
+							"\r",
+							"    for(child in response){\r",
+							"        numFields++\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(numFields).to.eql(expectedNumFields)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Entry has no null fields\",()=>{\r",
+							"    const response = pm.response.json()[0]\r",
+							"    var success = true\r",
+							"\r",
+							"    for(child in response){\r",
+							"        if(child!=\"address_2\" && child!=\"address_3\"){\r",
+							"            if(response[child] == null){\r",
+							"                success = false\r",
+							"                console.error(child +\" contains null value\")\r",
+							"            }\r",
+							"            //console.log(child + \"::\" + response[child])\r",
+							"        }\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(success).to.eql(true)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "b0aac670-7d82-48a9-8c4a-4571b2657285",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openbrewerydb.org/v1/breweries/random",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openbrewerydb",
+						"org"
+					],
+					"path": [
+						"v1",
+						"breweries",
+						"random"
+					],
+					"query": [
+						{
+							"key": "size",
+							"value": "2",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "07859b75-b511-4402-9bbd-59078c989229",
+					"name": "Get Random Brewery (Multiple)",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://api.openbrewerydb.org/v1/breweries/random?size=2",
+							"protocol": "https",
+							"host": [
+								"api",
+								"openbrewerydb",
+								"org"
+							],
+							"path": [
+								"v1",
+								"breweries",
+								"random"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2",
+									"type": "text"
+								}
+							]
+						}
+					},
+					"_postman_previewlanguage": null,
+					"header": null,
+					"cookie": [],
+					"responseTime": null,
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Search Breweries",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6599d795-9220-461d-acf2-046ac0a0ebea",
+						"exec": [
+							"var searchTerm = pm.request.toJSON().url.query[0].value\r",
+							"searchTerm = String(searchTerm)\r",
+							"console.log(searchTerm)\r",
+							"pm.collectionVariables.set(\"searchTerm\",searchTerm)"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "a7e64ca1-11cf-4d78-b551-f462c8e72a59",
+						"exec": [
+							"pm.test(\"Results contain search term\",()=>{\r",
+							"    const response = pm.response.json()\r",
+							"    var success = false;\r",
+							"    //console.log(response)\r",
+							"\r",
+							"    \r",
+							"    for(result of response){ //check every search result\r",
+							"        for(field in result){ //check every field in search result\r",
+							"            //console.log(result[field])\r",
+							"            var text = String(result[field]).toUpperCase()\r",
+							"            var match = pm.collectionVariables.get(\"searchTerm\").toUpperCase()\r",
+							"            if(text.includes(match)){\r",
+							"                console.log(\"Text: \"+text+\" ::: \"+\"Match: \"+match)\r",
+							"                success = true\r",
+							"            }\r",
+							"\r",
+							"        }\r",
+							"        //console.log(result)\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(success).to.eql(true)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"List entry has all fields\",()=>{\r",
+							"    const expectedNumFields = 16\r",
+							"    const response = pm.response.json()[0]\r",
+							"    var numFields = 0\r",
+							"\r",
+							"    for(child in response){\r",
+							"        numFields++\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(numFields).to.eql(expectedNumFields)\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Entry has no null fields\",()=>{\r",
+							"    const response = pm.response.json()[0]\r",
+							"    var success = true\r",
+							"\r",
+							"    for(child in response){\r",
+							"        if(child!=\"address_2\" && child!=\"address_3\"){\r",
+							"            if(response[child] == null){\r",
+							"                success = false\r",
+							"                //console.error(child +\" contains null value\")\r",
+							"            }\r",
+							"            //console.log(child + \"::\" + response[child])\r",
+							"        }\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(success).to.eql(true)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "de1965b7-6eea-48cc-9d92-588b5f81c291",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.openbrewerydb.org/v1/breweries/search?query=dog&per_page=3",
+					"protocol": "https",
+					"host": [
+						"api",
+						"openbrewerydb",
+						"org"
+					],
+					"path": [
+						"v1",
+						"breweries",
+						"search"
+					],
+					"query": [
+						{
+							"key": "query",
+							"value": "dog"
+						},
+						{
+							"key": "per_page",
+							"value": "3"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Metadata",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d9caffb0-56a0-425f-bcde-4112665352cc",
+						"exec": [
+							"pm.test(\"Correct number of fields returned\",()=>{\r",
+							"    const response = pm.response.json()\r",
+							"    const numExpectedFields = 3\r",
+							"    var numFields = 0\r",
+							"\r",
+							"    for(element in response){\r",
+							"        //console.log(element)\r",
+							"        numFields++\r",
+							"    }\r",
+							"\r",
+							"    pm.expect(numFields).to.eql(numExpectedFields)\r",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "7f7456f8-c168-4097-b89d-fd6c879c7ac2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "https://api.openbrewerydb.org/v1/breweries/meta"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "d5f6f882-559c-4fcb-8c3f-3cf916691d42",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "11dac827-7f11-4424-9c33-f5d654553f7b",
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Status is OK\", ()=>{",
+					"    pm.expect(pm.response.code).to.eql(200)   ",
+					"})"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "f82be97f-3eaf-4bd1-805f-a846f33702a1",
+			"key": "searchTerm",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
